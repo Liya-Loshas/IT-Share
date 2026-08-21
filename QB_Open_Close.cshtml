@@ -1,0 +1,566 @@
+﻿
+@{
+    ViewBag.Title = "Question Bank Open/Close";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-12">
+        <h2>Question Bank Open / Close</h2>
+    </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+
+    <div class="ibox">
+        <div class="ibox-content">
+
+            <div class="row">
+
+                <div class="col-md-4">
+                    <label>Academic Year</label>
+                    <select id="Acc_Yr_Id" class="form-control">
+                        <option value="">--Select--</option>
+
+                        @foreach (var item in ViewBag.AcademicYears)
+                        {
+                            <option value="@item.Acc_yr_Id">
+                                @item.Year
+                            </option>
+                        }
+
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label>Semester</label>
+                    <select id="Acc_Yr_Sem_Id" class="form-control">
+                        <option value="">--Select Semester--</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <hr />
+
+            <div class="row">
+
+                <div class="col-md-12">
+
+                    <label>
+                        <input type="checkbox" id="chkAll" />
+                        Select All
+                    </label>
+
+                    <div id="ProgrammeList"
+                         style="border:1px solid #ddd;padding:10px;height:250px;overflow:auto;">
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>Courses</label>
+
+                            <div id="CourseList"
+                                 style="border:1px solid #ddd;padding:10px;height:250px;overflow:auto;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <br />
+
+            <div class="row">
+
+                <div class="col-md-3">
+                    <label>Open Date</label>
+                    <input type="date"
+                           id="OpenDate"
+                           class="form-control" />
+                </div>
+
+                <div class="col-md-3">
+                    <label>Close Date</label>
+                    <input type="date"
+                           id="CloseDate"
+                           class="form-control" />
+                </div>
+
+                <div class="col-md-3">
+
+                    <label>Status</label>
+
+                    <div>
+
+                        <label>
+                            <input type="radio"
+                                   name="Status"
+                                   value="true"
+                                   checked />
+                            Open
+                        </label>
+
+                        &nbsp;&nbsp;
+
+                        <label>
+                            <input type="radio"
+                                   name="Status"
+                                   value="false" />
+                            Close
+                        </label>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <br />
+
+                    <button class="btn btn-success"
+                            id="btnSave">
+
+                        Save
+
+                    </button>
+
+                </div>
+                <hr />
+
+                <div class="row">
+                    <div class="col-md-12">
+
+                        <h3>Question Bank Schedule List</h3>
+
+                        <div class="table-responsive">
+
+                            <table class="table table-bordered table-striped" id="QBStatusTable">
+
+                                <thead>
+                                    <tr style="background:#337ab7;">
+                                        <th>Sl.No</th>
+                                        <th>Programme</th>
+                                        <th>Course</th>
+                                        <th>Open Date</th>
+                                        <th>Close Date</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody id="QBStatusBody">
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<link href="~/DataTables-1.10.16/buttons.bootstrap.min.css" rel="stylesheet" />
+<link href="~/DataTables-1.10.16/buttons.bootstrap.min.css" rel="stylesheet" />
+<link href="~/DataTables-1.10.16/dataTables.bootstrap.min.css" rel="stylesheet" />
+<link href="~/DataTables-1.10.16/select.dataTables.min.css" rel="stylesheet" />
+<link href="~/DataTables-1.10.16/editor.dataTables.min.css" rel="stylesheet" />
+<link href="~/css/plugins/daterangepicker/daterangepicker-bs3.css" rel="stylesheet">
+<link href="~/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+<link href="~/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+<!-- Jquery Validate -->
+<script src="~/js/plugins/validate/jquery.validate.min.js"></script>
+<script src="~/js/SpecialValidation.js"></script>
+<script src="~/js/plugins/sweetalert/sweetalert.min.js"></script>
+<script src="~/js/plugins/datapicker/bootstrap-datepicker.js"></script>
+
+<script src="~/DataTables-1.10.16/dataTables.bootstrap.min.js"></script>
+<script src="~/DataTables-1.10.16/dataTables.buttons.min.js"></script>
+<script src="~/DataTables-1.10.16/buttons.bootstrap.min.js"></script>
+<script src="~/DataTables-1.10.16/jszip.min.js"></script>
+<script src="~/DataTables-1.10.16/pdfmake.min.js"></script>
+<script src="~/DataTables-1.10.16/vfs_fonts.js"></script>
+<script src="~/DataTables-1.10.16/buttons.html5.min.js"></script>
+<script src="~/DataTables-1.10.16/buttons.print.min.js"></script>
+<script src="~/DataTables-1.10.16/buttons.colVis.min.js"></script>
+<script src="~/DataTables-1.10.16/dataTables.select.min.js"></script>
+
+<script src="~/DataTables-1.10.16/jquery.dataTables.1.10.19.min.js"></script>
+<script>
+    $(function () {
+
+        $("#Acc_Yr_Id").change(function () {
+            debugger
+            $("#ProgrammeList").html("");
+
+            $.post('/Faculty/Faculty/LoadSemesters',
+                {
+                    Acc_Yr_Id: $("#Acc_Yr_Id").val()
+                },
+                function (data) {
+
+                    var html = "<option value=''>--Select Semester--</option>";
+
+                    $.each(data, function (i, v) {
+
+                        html += "<option value='" + v.Acc_Yr_Sem_Id + "'>"
+                            + v.Semester +
+                            "</option>";
+
+                    });
+
+                    $("#Acc_Yr_Sem_Id").html(html);
+
+                });
+
+        });
+
+        $("#Acc_Yr_Sem_Id").change(function () {
+            debugger
+            $("#ProgrammeList").html("");
+            $("#CourseList").html("");
+
+            $.post('/Faculty/Faculty/LoadProgrammes',
+                {
+                    Acc_Yr_Sem_Id: $("#Acc_Yr_Sem_Id").val()
+                },
+                function (data) {
+
+                    if (data.Error) {
+                        alert(data.Message);
+                        return;
+                    }
+
+                    var html = "";
+
+                    $.each(data, function (i, v) {
+
+                        html += "<div>";
+
+                        html += "<label>";
+
+                        html += "<input type='checkbox' class='chkProgramme' value='"
+                            + v.Pgm_Id +
+                            "'/> ";
+
+                        html += v.Programme;
+
+                        html += "</label>";
+
+                        html += "</div>";
+
+                    });
+
+                    $("#ProgrammeList").html(html);
+                    loadQBStatus();
+                });
+
+        });
+
+        $("#chkAll").click(function () {
+
+            $(".chkProgramme").prop(
+                "checked",
+                $(this).prop("checked")
+            );
+
+            var checked = $(".chkProgramme:checked");
+
+            if (checked.length == 1) {
+
+                loadProgrammeQBStatus(
+                    checked.first().val()
+                );
+
+            }
+            else if (checked.length == 0) {
+
+                $("#OpenDate").val("");
+                $("#CloseDate").val("");
+
+            }
+
+        });
+        $(document).on("change", ".chkProgramme", function () {
+
+            var checked = $(".chkProgramme:checked");
+
+            if (checked.length == 1) {
+
+                var pgmId = checked.first().val();
+                var accYrSemId = $("#Acc_Yr_Sem_Id").val();
+
+                loadProgrammeQBStatus(pgmId);
+
+                loadCourses(pgmId, accYrSemId);
+
+            }
+            else if (checked.length == 0) {
+
+                $("#OpenDate").val("");
+                $("#CloseDate").val("");
+
+                $("input[name='Status'][value='true']").prop("checked", true);
+
+                $("#CourseList").html("");
+
+            }
+            else {
+
+                // Multiple programmes selected
+                $("#CourseList").html("");
+
+                // Keep the dates already entered by the user
+            }
+
+        });
+        $("#btnSave").click(function () {
+           
+            var programmes = [];
+
+            $(".chkProgramme:checked").each(function () {
+
+                programmes.push($(this).val());
+
+            });
+           
+            if (programmes.length == 0) {
+
+                alert("Select at least one programme.");
+
+                return;
+
+            }
+
+            var courses = [];
+
+            $(".chkCourse:checked").each(function () {
+                courses.push($(this).val());
+            });
+           
+            $.ajax({
+                url: '/Faculty/Faculty/SaveQBStatus',
+                type: 'POST',
+                traditional: true,
+
+                data: {
+                    ProgrammeIds: programmes,
+                    CourseIds: courses,
+                    Acc_Yr_Sem_Id: $("#Acc_Yr_Sem_Id").val(),
+                    OpenDate: $("#OpenDate").val(),
+                    CloseDate: $("#CloseDate").val(),
+                    IsOpen: $("input[name='Status']:checked").val()
+                },
+
+                success: function (r) {
+
+                    alert(r.Message);
+
+                    if (r.Success) {
+                        loadQBStatus();
+                    }
+                }
+            });
+
+        });
+
+    });
+
+function loadCourses(pgmId, accYrSemId) {
+
+    if (pgmId == "" || accYrSemId == "") {
+        $("#CourseList").html("");
+        return;
+    }
+
+    $.post('/Faculty/Faculty/LoadCourses',
+        {
+            Pgm_Id: pgmId,
+            Acc_Yr_Sem_Id: accYrSemId
+        },
+        function (data) {
+
+            if (data.Error) {
+                alert(data.Message);
+                $("#CourseList").html("");
+                return;
+            }
+
+            var html = "";
+
+            $.each(data, function (i, v) {
+
+                html += "<div>";
+                html += "<label>";
+                html += "<input type='checkbox' class='chkCourse' value='"
+                    + v.Course_Id + "' /> ";
+
+                html += v.Course_Code + " - " + v.Course_Name + "(" + v.Category + ")";
+
+                html += "</label>";
+                html += "</div>";
+
+            });
+
+            $("#CourseList").html(html);
+        });
+}
+function loadQBStatus() {
+
+    var accYrSemId = $("#Acc_Yr_Sem_Id").val();
+
+    if (accYrSemId == "") {
+        $("#QBStatusBody").html("");
+        return;
+    }
+
+    $.post(
+        '/Faculty/Faculty/GetQBStatus',
+        {
+            Acc_Yr_Sem_Id: accYrSemId
+        },
+        function (data) {
+
+            if (data.Error) {
+                alert(data.Message);
+                return;
+            }
+
+            var html = "";
+            var i = 1;
+
+            $.each(data, function (index, item) {
+
+                html += "<tr>";
+
+                html += "<td>" + i + "</td>";
+
+                html += "<td>" +
+                    item.Programme +
+                    "</td>";
+
+                html += "<td>" +
+                    item.Course_Code +
+                    " - " +
+                    item.Course_Name +
+                    "</td>";
+
+                html += "<td>" +
+                    formatDate(item.Open_Date) +
+                    "</td>";
+
+                html += "<td>" +
+                    formatDate(item.Close_Date) +
+                    "</td>";
+
+                if (item.Is_Open) {
+
+                    html += "<td style='color:green;font-weight:bold;'>" +
+                        "Open" +
+                        "</td>";
+
+                }
+                else {
+
+                    html += "<td style='color:red;font-weight:bold;'>" +
+                        "Closed" +
+                        "</td>";
+                }
+
+                html += "<td>";
+
+                html +=
+                    "<button type='button' " +
+                    "class='btn btn-danger btn-xs' " +
+                    "onclick='deleteQB(" + item.Id + ")'>" +
+                    "Delete" +
+                    "</button>";
+
+                html += "</td>";
+
+                html += "</tr>";
+
+                i++;
+            });
+
+            $("#QBStatusBody").html(html);
+        }
+    );
+}
+    function deleteQB(id) {
+
+        if (!confirm("Do you want to delete?")) {
+            return;
+        }
+
+
+        $.post('/Faculty/Faculty/DeleteQBStatus',
+            {
+                Id: id
+            },
+            function (data) {
+
+                alert("Deleted Successfully");
+
+                loadQBStatus();
+
+            });
+
+    }
+    function formatDate(date) {
+        if (date == null)
+            return "";
+
+        var d = new Date(parseInt(date.substr(6)));
+
+        return d.getDate() + "-" +
+            (d.getMonth() + 1) + "-" +
+            d.getFullYear();
+    }
+function loadProgrammeQBStatus(pgmId) {
+
+    var accYrSemId = $("#Acc_Yr_Sem_Id").val();
+
+    if (pgmId == "" || accYrSemId == "") {
+        $("#OpenDate").val("");
+        $("#CloseDate").val("");
+        return;
+    }
+
+    $.post('/Faculty/Faculty/GetQBProgrammeStatus',
+        {
+            Acc_Yr_Sem_Id: accYrSemId,
+            Pgm_Id: pgmId
+        },
+        function (data) {
+
+            if (data == null || data.Exists == false) {
+
+                $("#OpenDate").val("");
+                $("#CloseDate").val("");
+
+                // Default status
+                $("input[name='Status'][value='true']").prop("checked", true);
+
+                return;
+            }
+
+            $("#OpenDate").val(data.OpenDate);
+            $("#CloseDate").val(data.CloseDate);
+
+            if (data.Is_Open) {
+                $("input[name='Status'][value='true']").prop("checked", true);
+            }
+            else {
+                $("input[name='Status'][value='false']").prop("checked", true);
+            }
+
+        });
+}
+</script>
+
