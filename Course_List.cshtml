@@ -1,0 +1,125 @@
+﻿@{
+    ViewBag.Title = "Course_List";
+    Layout = "~/Views/Shared/Faculty_Layout.cshtml";
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-4  col-xs-2">
+        <h2>Question Bank</h2>
+    </div>
+
+    <div class="col-sm-4  col-xs-2">
+        <br />
+    </div>
+    <div class="col-sm-4">
+        <div class="title-action">
+            <div class="btn-group">
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row wrapper wrapper-content  border-bottom animated fadeInUp white-bg list-group-item list-group-item-action list-group-item-secondary">
+    <form role="form" class="form-horizontal" id="form_add_questions" method="post">
+
+
+        @*<div class="row">
+            <div class="col-md-12">
+                
+                <div class="alert alert-danger text-center">
+                  <b> CLOSED</b>
+                </div>
+            </div>
+
+        </div>*@
+
+            <div class="row" >
+                <div class="col-md-12">
+                    @*  <a href="~/faculty/faculty/Attendance_Home"  class="btn  btn-primary btn-sm btn-outline" ></a>*@
+                    <div class="alert alert-warning">
+                        Click on <b>Add Questions</b> to Add Questions
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered">
+
+                            <tr class="text-center" style="background-color: #337ab7;color:white;">
+                                <th class="text-center">Sl.No</th>
+                                <th class="text-center">Course Code</th>
+                                <th class="text-center">Course Title</th>
+                                <th class="text-center">Semester</th>
+                                <th class="text-center">Total Mark</th>
+                                <th class="text-center">Total No of Questions</th>
+                                <th class="text-center">Easy</th>
+                                <th class="text-center">Moderate</th>
+                                <th class="text-center">Difficult</th>
+                                <th class="text-center">Action</th>
+                            </tr>
+
+                            <tbody>
+                                @{
+                                    int i = 0;
+                                }
+                                @foreach (var item in Model)
+                                {
+                                    i++;
+
+                                    //if (item.Sem_Id == 5 || item.Course_Code== "CMSST24132202" || item.Course_Code == "CMSST24139201"  || item.Course_Code == "CMSPH24131204")
+                                    //{
+                                    <tr>
+                                        <td class="text-center">@i.</td>
+                                        <td class="text-center">@item.Course_Code</td>
+                                        <td>
+                                            @item.Course_Name
+
+                                        </td>
+                                        <td class="text-center">@item.Semester</td>
+                                        <td class="text-center">@item.MAxMark</td>
+                                        <td class="text-center">@item.Total_Questions</td>
+                                        <td class="text-center">@item.Easy_Questions</td>
+                                        <td class="text-center">@item.Moderate_Questions</td>
+                                        <td class="text-center">@item.Difficult_Questions</td>
+
+                                        <td class="text-center">
+
+                                            <a class="btn btn-success btn-xs btn-outline"
+                                               href="/Faculty/Faculty/check_QBStatus?Course_Id=@item.Course_Id&EditStatus=0">
+                                                Add Questions
+                                            </a>
+
+                                            <a class="btn btn-info btn-xs btn-outline"
+                                               href="/Faculty/Faculty/View_All_Questions?Course_Id=@item.Course_Id">
+                                                View Questions
+                                            </a>
+
+                                            <a class="btn btn-danger btn-xs btn-outline"
+                                               href="/QuestionBank/QB/check_QuestionBank?Course_Id=@item.Course_Id">
+                                                Questions Distribution
+                                            </a>
+
+                                            <a class="btn btn-success btn-xs btn-outline"
+                                               href="/Faculty/Faculty/check_QBStatus?Course_Id=@item.Course_Id&EditStatus=1">
+                                                Edit Syllabus
+                                            </a>
+
+                                            <a class="btn btn-primary btn-xs btn-outline"
+                                               href="/Faculty/Faculty/Course_SyllabusPrint?Course_Id=@item.Course_Id">
+                                                Print Syllabus
+                                            </a>
+
+                                        </td>
+                                    </tr>
+                                    @*}*@
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+    </form>
+</div>
+<script>
+
+</script>
+
+
